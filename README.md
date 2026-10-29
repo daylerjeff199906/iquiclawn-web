@@ -112,8 +112,10 @@ Es esperado y desaparece con la primera novedad publicada.
 - **Clown hospitalario:** se presenta como práctica artística y de acompañamiento, con la aclaración de que no es un
   tratamiento clínico. No se menciona ningún hospital.
 - **Festival de Belén:** Iquiclown figura como participante; la ficha aclara que no es su fundadora.
-- La marca es el nombre «Iquiclown» en tipografía; no se creó un logotipo. El icono de pestaña (`public/favicon.svg`) es
-  provisional y debe reemplazarse si existe una identidad oficial.
+- La marca usa los logotipos oficiales de Iquiclown, guardados en `src/assets/brands/` (los optimiza Astro): el logotipo de
+  cabecera (`iquiclown-logo-header.png`), el de pie (`iquiclown-logo-footer.png`, recortado de la versión original
+  `-original`) y los hospitalarios, que se muestran en la página de clown hospitalario. `iquiclown-logotipo-nariz.png`
+  se usa en la página 404. `iquiclown-hospitalario-logo-rojo.png` queda disponible sin uso. El icono de pestaña es `public/favicon.ico`.
 
 ## Datos pendientes antes de publicar
 
@@ -125,7 +127,6 @@ Es esperado y desaparece con la primera novedad publicada.
 - [ ] Confirmar que Verenice Ramos autoriza y es autora de las tres fotos de la clausura de talleres, y que los participantes (con etiquetas de nombre y certificados visibles) aceptan su publicación.
 - [ ] Confirmar autoría de las fotografías del Festival de Belén y las de las visitas hospitalarias (hoy figuran como «Archivo de Iquiclown»).
 - [ ] Más fotografías autorizadas para las demás actividades.
-- [ ] Logotipo oficial, si existe, y reemplazo del icono provisional.
 - [ ] Equipo: nombres, cargos y autorización de publicación.
 - [ ] Hitos verificables adicionales de la trayectoria desde 2014.
 - [ ] Estado de la convocatoria de voluntariado y condiciones, cuando existan.

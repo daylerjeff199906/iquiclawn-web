@@ -1,34 +1,29 @@
 ---
-/** Marca tipográfica temporal. No es un logotipo oficial. */
+import { Image } from 'astro:assets';
+import logoHeader from '../../assets/brands/iquiclown-logo-header.png';
+import logoFooter from '../../assets/brands/iquiclown-logo-footer.png';
+
+/**
+ * Logotipo oficial de Iquiclown. El enlace que lo contiene aporta el nombre accesible,
+ * por eso la imagen es decorativa (alt vacío).
+ * - header: logotipo rojo con nariz brillante, para fondos claros.
+ * - footer: versión con «Iqui» en tono crema, para fondos oscuros.
+ */
 interface Props {
-  light?: boolean;
-  large?: boolean;
+  variant?: 'header' | 'footer';
 }
-const { light = false, large = false } = Astro.props;
+const { variant = 'header' } = Astro.props;
+const src = variant === 'footer' ? logoFooter : logoHeader;
 ---
 
-<span class:list={['wordmark', { light, large }]} aria-hidden="true"><span class="a">IQUI</span><span class="b">CLOWN</span></span>
+<Image class:list={['logo', variant]} {src} alt="" width={360} densities={[1, 2]} loading="eager" />
 
 <style>
-  .wordmark {
-    font-family: var(--font-display);
-    font-size: 1.85rem;
-    line-height: 1;
-    letter-spacing: 0.01em;
+  .logo {
+    width: auto;
+    height: 3rem;
   }
-  .wordmark.large {
-    font-size: clamp(2.5rem, 6vw, 4rem);
-  }
-  .a {
-    color: var(--green);
-  }
-  .b {
-    color: var(--coral-deep);
-  }
-  .light .a {
-    color: var(--cream);
-  }
-  .light .b {
-    color: var(--coral);
+  .logo.footer {
+    height: clamp(3rem, 6vw, 4.25rem);
   }
 </style>

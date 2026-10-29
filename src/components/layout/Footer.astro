@@ -20,7 +20,7 @@ const { email, phone } = organization.contact;
 
     <div class="grid">
       <div class="about">
-        <a class="brand" href="/" aria-label={`${organization.name}, ir al inicio`}><Wordmark light /></a>
+        <a class="brand" href="/" aria-label={`${organization.name}, ir al inicio`}><Wordmark variant="footer" /></a>
         <p>{organization.shortDescription}</p>
         {email && <p><a class="contact-link" href={`mailto:${email}`}>{email}</a></p>}
         {phone && <p><a class="contact-link" href={phone.href}>{phone.display}</a></p>}

@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import logotipo from '../assets/brands/iquiclown-logotipo-nariz.png';
 import Button from '../components/ui/Button.astro';
 import { mainNav } from '../data/navigation';
 ---
@@ -21,11 +23,7 @@ import { mainNav } from '../data/navigation';
           </ul>
         </nav>
       </div>
-      <svg class="lost__art" viewBox="0 0 220 220" aria-hidden="true" focusable="false">
-        <circle cx="110" cy="110" r="100" fill="var(--yellow-soft)"></circle>
-        <circle cx="110" cy="98" r="30" fill="var(--coral)"></circle>
-        <path d="M40 150c18-14 35-14 53 0s35 14 53 0 24-10 34-6" fill="none" stroke="var(--green)" stroke-width="9" stroke-linecap="round"></path>
-      </svg>
+      <Image class="lost__art" src={logotipo} alt="" width={640} loading="eager" />
     </div>
   </section>
 </BaseLayout>
