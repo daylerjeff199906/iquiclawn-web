@@ -26,15 +26,22 @@ export const organization = {
   /** Año desde el que existen referencias públicas de su trayectoria. */
   referenceYear: 2014,
   contact: {
-    /** Correo confirmado. Se define con PUBLIC_CONTACT_EMAIL. */
-    email: import.meta.env.PUBLIC_CONTACT_EMAIL || undefined,
+    /** Correo confirmado por la organización. PUBLIC_CONTACT_EMAIL permite cambiarlo sin editar el código. */
+    email: import.meta.env.PUBLIC_CONTACT_EMAIL || 'iquiclown.sonrisas@gmail.com',
+    /** Teléfono confirmado (Perú). */
+    phone: { display: '935 488 627', href: 'tel:+51935488627' },
     /** Endpoint real del formulario. Se define con PUBLIC_CONTACT_ENDPOINT. */
     formEndpoint: import.meta.env.PUBLIC_CONTACT_ENDPOINT || undefined,
   },
   /** Redes sociales verificadas. Añadir solo perfiles confirmados por la organización. */
-  social: [] as SocialLink[],
+  social: [
+    { label: 'Facebook', url: 'https://www.facebook.com/iquiclown' },
+  ] as SocialLink[],
 } as const;
 
 export const hasContactChannel = Boolean(
-  organization.contact.email || organization.contact.formEndpoint || organization.social.length,
+  organization.contact.email ||
+    organization.contact.phone ||
+    organization.contact.formEndpoint ||
+    organization.social.length,
 );

@@ -4,6 +4,7 @@ import { footerExplore, footerLegal } from '../../data/navigation';
 import Wordmark from '../ui/Wordmark.astro';
 
 const { social } = organization;
+const { email, phone } = organization.contact;
 ---
 
 <footer class="site-footer section--dark">
@@ -21,6 +22,8 @@ const { social } = organization;
       <div class="about">
         <a class="brand" href="/" aria-label={`${organization.name}, ir al inicio`}><Wordmark light /></a>
         <p>{organization.shortDescription}</p>
+        {email && <p><a class="contact-link" href={`mailto:${email}`}>{email}</a></p>}
+        {phone && <p><a class="contact-link" href={phone.href}>{phone.display}</a></p>}
         <p class="label place">{organization.location.locality}, {organization.location.region}, {organization.location.country}</p>
       </div>
 
@@ -118,6 +121,9 @@ const { social } = organization;
   .brand {
     justify-self: start;
     text-decoration: none;
+  }
+  .contact-link {
+    color: var(--cream);
   }
   .place {
     color: var(--cream);

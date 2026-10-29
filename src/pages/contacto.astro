@@ -2,11 +2,13 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/ui/PageHeader.astro';
 import SectionLabel from '../components/ui/SectionLabel.astro';
+import Button from '../components/ui/Button.astro';
 import ContactForm from '../components/interactive/ContactForm';
 import { organization, hasContactChannel } from '../data/organization';
 
-const { email, formEndpoint } = organization.contact;
+const { email, phone, formEndpoint } = organization.contact;
 const { social, location } = organization;
+const shortUrl = (url: string) => url.replace('https://www.', '').replace('https://', '');
 ---
 
 <BaseLayout
@@ -33,6 +35,14 @@ const { social, location } = organization;
             <dd>{location.locality}, {location.region}, {location.country}</dd>
           </div>
           {
+            phone && (
+              <div>
+                <dt>Teléfono</dt>
+                <dd><a href={phone.href}>{phone.display}</a></dd>
+              </div>
+            )
+          }
+          {
             email && (
               <div>
                 <dt>Correo electrónico</dt>
@@ -46,7 +56,7 @@ const { social, location } = organization;
                 <dt>{s.label}</dt>
                 <dd>
                   <a href={s.url} rel="noopener noreferrer" target="_blank">
-                    Perfil oficial de {organization.name}
+                    {shortUrl(s.url)}
                     <span class="visually-hidden"> (se abre en una pestaña nueva)</span>
                   </a>
                 </dd>
@@ -63,7 +73,14 @@ const { social, location } = organization;
               <ContactForm client:load endpoint={formEndpoint} fallbackEmail={email} />
             </div>
           ) : hasContactChannel ? (
-            <p class="lead">Puedes usar cualquiera de los canales de esta página.</p>
+            <div class="channel">
+              <h3>Escríbenos o llámanos</h3>
+              <p class="lead">Puedes usar cualquiera de los canales de esta página. Te responderemos lo antes posible.</p>
+              <div class="actions">
+                {email && <Button href={`mailto:${email}`} variant="primary" arrow>Escribir por correo</Button>}
+                {phone && <Button href={phone.href} variant="outline">Llamar al {phone.display}</Button>}
+              </div>
+            </div>
           ) : (
             <div class="pending" role="note">
               <h3>Estamos confirmando nuestros canales</h3>
@@ -119,6 +136,11 @@ const { social, location } = organization;
     display: grid;
     gap: var(--space-4);
     width: 100%;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
   }
   .pending {
     display: grid;

@@ -43,7 +43,7 @@ Copia `.env.example` a `.env` y completa solo lo que esté confirmado:
 | --- | --- |
 | `PUBLIC_SITE_URL` | Dominio de producción. Activa canonical, URLs absolutas de Open Graph, `sitemap-index.xml` y la línea `Sitemap` de `robots.txt`. |
 | `PUBLIC_CONTACT_ENDPOINT` | Endpoint real del formulario (por ejemplo, uno de Formspree). Sin él, **el formulario no se muestra**. |
-| `PUBLIC_CONTACT_EMAIL` | Correo confirmado. Aparece en Contacto y Privacidad y como alternativa si falla el formulario. |
+| `PUBLIC_CONTACT_EMAIL` | Cambia el correo de contacto sin editar código (por defecto, el confirmado en `src/data/organization.ts`). |
 
 ## Estructura
 
@@ -103,9 +103,10 @@ Es esperado y desaparece con la primera novedad publicada.
 - **Actividades y novedades se mantienen como dos secciones**, pero hoy hay una sola actividad documentada (la referencia
   al Festival de Belén) y ninguna novedad. Se dejaron ambas rutas y colecciones listas, con estados vacíos honestos, para
   que crezcan sin cambiar el código. Si la organización prefiere una única sección editorial, basta con enlazar solo una.
-- **Contacto:** no se proporcionó ningún canal confirmado, así que la página lo dice claramente y no muestra el formulario
-  ni datos inventados. Al definir `PUBLIC_CONTACT_ENDPOINT` aparece el formulario con validación accesible, y solo muestra
-  «Mensaje enviado» si el servicio responde con éxito.
+- **Contacto:** canales confirmados por la organización: correo `iquiclown.sonrisas@gmail.com`, teléfono 935 488 627 y
+  Facebook (`facebook.com/iquiclown`), definidos en `src/data/organization.ts`. El formulario sigue sin mostrarse: al
+  definir `PUBLIC_CONTACT_ENDPOINT` aparece con validación accesible y solo muestra «Mensaje enviado» si el servicio
+  responde con éxito.
 - **Participa:** no hay convocatoria vigente confirmada; la página lo indica y presenta las áreas en las que se puede
   consultar, sin requisitos ni promesas de admisión.
 - **Clown hospitalario:** se presenta como práctica artística y de acompañamiento, con la aclaración de que no es un
@@ -117,7 +118,7 @@ Es esperado y desaparece con la primera novedad publicada.
 ## Datos pendientes antes de publicar
 
 - [ ] Dominio de producción (`PUBLIC_SITE_URL`).
-- [ ] Al menos un canal de contacto confirmado: correo, formulario (`PUBLIC_CONTACT_ENDPOINT`) y/o redes verificadas.
+- [ ] Formulario de contacto: definir `PUBLIC_CONTACT_ENDPOINT` si se desea (hoy se usan correo, teléfono y Facebook).
 - [ ] Fechas, lugares y años de las actividades del Festival de Belén, y fuentes públicas citables.
 - [ ] Confirmar la autorización de las personas que aparecen en las fotografías actuales (participantes, público y, en las visitas hospitalarias, personas atendidas) y las fechas y lugares de cada actividad.
 - [ ] Revisar la foto `clown-hospitalario-pasillo-lector-asistencia.jpg`: muestra un comunicado interno parcialmente legible; conviene recortarla o reemplazarla.

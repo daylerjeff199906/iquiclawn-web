@@ -24,6 +24,8 @@ const jsonLd = {
   name: organization.name,
   description: organization.description,
   ...(Astro.site ? { url: Astro.site.href } : {}),
+  ...(organization.contact.email ? { email: organization.contact.email } : {}),
+  ...(organization.contact.phone ? { telephone: '+51935488627' } : {}),
   address: {
     '@type': 'PostalAddress',
     addressLocality: organization.location.locality,
