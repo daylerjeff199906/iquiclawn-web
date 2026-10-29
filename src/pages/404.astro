@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/ui/Button.astro';
+import { mainNav } from '../data/navigation';
+---
+
+<BaseLayout title="Página no encontrada" description="La página que buscas no existe o cambió de lugar." noindex>
+  <section class="section lost">
+    <div class="container lost__grid">
+      <div class="lost__copy">
+        <p class="eyebrow">Error 404</p>
+        <h1>Esta página se fue de gira</h1>
+        <p class="lead">No encontramos lo que buscas. Puede que el enlace haya cambiado o que la dirección tenga un error.</p>
+        <div class="actions">
+          <Button href="/" variant="primary" arrow>Volver al inicio</Button>
+          <Button href="/actividades" variant="outline">Ver actividades</Button>
+        </div>
+        <nav aria-label="Páginas del sitio">
+          <ul>
+            {mainNav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+          </ul>
+        </nav>
+      </div>
+      <svg class="lost__art" viewBox="0 0 220 220" aria-hidden="true" focusable="false">
+        <circle cx="110" cy="110" r="100" fill="var(--yellow-soft)"></circle>
+        <circle cx="110" cy="98" r="30" fill="var(--coral)"></circle>
+        <path d="M40 150c18-14 35-14 53 0s35 14 53 0 24-10 34-6" fill="none" stroke="var(--green)" stroke-width="9" stroke-linecap="round"></path>
+      </svg>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lost__grid {
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+  }
+  @media (min-width: 52rem) {
+    .lost__grid {
+      grid-template-columns: 1.3fr 1fr;
+    }
+  }
+  .lost__copy {
+    display: grid;
+    gap: var(--space-4);
+    justify-items: start;
+  }
+  .eyebrow {
+    margin: 0;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem var(--space-4);
+    list-style: none;
+  }
+  li a {
+    display: inline-block;
+    padding-block: 0.5rem;
+  }
+  .lost__art {
+    width: min(100%, 18rem);
+    justify-self: center;
+  }
+</style>

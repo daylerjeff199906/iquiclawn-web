@@ -1,0 +1,70 @@
+---
+/**
+ * Tres bandas de color a sangre con palabras gigantes. Es un elemento gráfico estático
+ * (sin animación): el lector de pantalla recibe una sola frase equivalente.
+ */
+---
+
+<div class="bands" role="img" aria-label="Arte, juego y encuentro">
+  <div class="band band--coral">
+    <span class="w w--left">Arte</span>
+  </div>
+  <div class="band band--yellow">
+    <span class="w w--mid">Jueg<i class="nose"></i></span>
+  </div>
+  <div class="band band--green">
+    <span class="w w--right">Encuentro</span>
+  </div>
+</div>
+
+<style>
+  .bands {
+    overflow: hidden;
+  }
+  .band {
+    display: flex;
+    align-items: center;
+    padding-inline: var(--gutter);
+    height: clamp(5.5rem, 17vw, 13rem);
+  }
+  .w {
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 15vw, 12rem);
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    padding-top: 0.04em;
+  }
+  .w--left {
+    margin-right: auto;
+  }
+  .w--mid {
+    margin-inline: auto;
+  }
+  .w--right {
+    margin-left: auto;
+  }
+  .band--coral {
+    background: var(--coral);
+    color: var(--cream);
+  }
+  .band--yellow {
+    background: var(--yellow);
+    color: var(--ink);
+  }
+  .band--green {
+    background: var(--green);
+    color: var(--cream);
+  }
+  /* La "O" de JUEGO es la nariz del clown. */
+  .nose {
+    display: inline-block;
+    width: 0.72em;
+    height: 0.72em;
+    margin-left: 0.04em;
+    border-radius: 50%;
+    background: var(--coral);
+  }
+</style>

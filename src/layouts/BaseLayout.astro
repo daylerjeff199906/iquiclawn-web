@@ -1,0 +1,71 @@
+---
+import { Font } from 'astro:assets';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/layout.css';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import Seo from '../components/layout/Seo.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  publishedTime?: string;
+  jsonLd?: Record<string, unknown>;
+}
+
+const props = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#FFF8ED" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <Font cssVariable="--font-display" preload />
+    <Font cssVariable="--font-body" preload />
+    <Font cssVariable="--font-mono" />
+    <Seo {...props} />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <Header />
+    <main id="contenido" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style is:global>
+  .skip-link {
+    position: absolute;
+    left: var(--space-4);
+    top: 0;
+    z-index: 100;
+    padding: 0.8rem 1.2rem;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    background: var(--green-deep);
+    color: var(--cream);
+    font-weight: 700;
+    transform: translateY(-120%);
+    transition: transform var(--dur) var(--ease);
+  }
+  .skip-link:focus {
+    transform: translateY(0);
+    color: var(--cream);
+    outline: 3px solid var(--yellow);
+    outline-offset: 2px;
+  }
+  main:focus {
+    outline: none;
+  }
+</style>

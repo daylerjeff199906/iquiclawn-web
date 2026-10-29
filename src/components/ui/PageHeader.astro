@@ -1,0 +1,126 @@
+---
+import Breadcrumbs, { type Crumb } from '../layout/Breadcrumbs.astro';
+
+interface Props {
+  title: string;
+  intro?: string;
+  eyebrow?: string;
+  crumbs?: Crumb[];
+  /** Color de fondo a sangre. */
+  tone?: 'cream' | 'yellow' | 'green';
+  /** Título largo (fichas de actividades y novedades): se compone como enunciado, no en mayúsculas gigantes. */
+  long?: boolean;
+}
+const { title, intro, eyebrow, crumbs, tone = 'cream', long = false } = Astro.props;
+---
+
+<header class:list={['page-header', `tone-${tone}`, { 'section--green': tone === 'green', 'section--yellow': tone === 'yellow' }]}>
+  <div class="container">
+    <div class="top">
+      {crumbs && <Breadcrumbs items={crumbs} />}
+      {eyebrow && <p class="label">{eyebrow}</p>}
+    </div>
+    <h1 class:list={{ long }}>{title}</h1>
+    <div class="below">
+      {intro && <p class="intro">{intro}</p>}
+      <div class="extra"><slot /></div>
+    </div>
+  </div>
+  <svg class="deco" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+    <circle cx="120" cy="90" r="80" fill="var(--deco-a)"></circle>
+  </svg>
+</header>
+
+<style>
+  .page-header {
+    --deco-a: var(--coral);
+    --deco-b: var(--yellow);
+    position: relative;
+    overflow: hidden;
+    padding-block: var(--space-5) var(--space-8);
+    border-bottom: 1px solid var(--line);
+  }
+  .container {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: var(--space-6);
+  }
+  .top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-5);
+  }
+  h1 {
+    max-width: 100%;
+  }
+  @media (min-width: 62rem) {
+    h1 {
+      max-width: 64%;
+    }
+  }
+  h1.long {
+    max-width: 100%;
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: var(--text-statement);
+    line-height: 1.03;
+    letter-spacing: -0.035em;
+    text-transform: none;
+  }
+  @media (min-width: 62rem) {
+    h1.long {
+      max-width: 72%;
+    }
+  }
+  .below {
+    display: grid;
+    gap: var(--space-4);
+    justify-items: start;
+  }
+  @media (min-width: 52rem) {
+    .below {
+      margin-left: 25%;
+    }
+  }
+  .intro {
+    max-width: 38rem;
+    font-size: clamp(1.2rem, 1rem + 0.8vw, 1.6rem);
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--text);
+  }
+  .extra:empty {
+    display: none;
+  }
+
+  .deco {
+    position: absolute;
+    right: -2rem;
+    top: 0.5rem;
+    width: clamp(9rem, 17vw, 15rem);
+  }
+  @media (max-width: 61.99rem) {
+    .deco {
+      display: none;
+    }
+  }
+
+  .tone-green {
+    --deco-a: var(--coral);
+    --deco-b: var(--yellow);
+    --text: var(--cream);
+  }
+  .tone-green h1 {
+    color: var(--cream);
+  }
+  .tone-yellow {
+    --deco-a: var(--coral);
+    --deco-b: var(--green);
+  }
+  .tone-yellow h1 {
+    color: var(--ink);
+  }
+</style>

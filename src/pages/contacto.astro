@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/ui/PageHeader.astro';
+import SectionLabel from '../components/ui/SectionLabel.astro';
+import ContactForm from '../components/interactive/ContactForm';
+import { organization, hasContactChannel } from '../data/organization';
+
+const { email, formEndpoint } = organization.contact;
+const { social, location } = organization;
+---
+
+<BaseLayout
+  title="Contacto"
+  description="Canales de contacto confirmados de Iquiclown, organización de voluntariado artístico y social de Iquitos, Loreto."
+>
+  <PageHeader
+    title="Contacto"
+    intro="Si quieres conocer más, proponer algo o consultar por futuras oportunidades, este es el lugar."
+    eyebrow="Hablemos"
+    tone="yellow"
+    crumbs={[{ label: 'Contacto' }]}
+  />
+
+  <section class="section" aria-labelledby="canales">
+    <div class="container row">
+      <div class="row__label"><SectionLabel>Canales</SectionLabel></div>
+      <div class="row__body">
+        <h2 id="canales" class="statement">Cómo encontrarnos.</h2>
+
+        <dl class="info">
+          <div>
+            <dt>Dónde trabajamos</dt>
+            <dd>{location.locality}, {location.region}, {location.country}</dd>
+          </div>
+          {
+            email && (
+              <div>
+                <dt>Correo electrónico</dt>
+                <dd><a href={`mailto:${email}`}>{email}</a></dd>
+              </div>
+            )
+          }
+          {
+            social.map((s) => (
+              <div>
+                <dt>{s.label}</dt>
+                <dd>
+                  <a href={s.url} rel="noopener noreferrer" target="_blank">
+                    Perfil oficial de {organization.name}
+                    <span class="visually-hidden"> (se abre en una pestaña nueva)</span>
+                  </a>
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+
+        {
+          formEndpoint ? (
+            <div class="channel">
+              <h3>Escríbenos</h3>
+              <p class="lead">Completa el formulario y te responderemos por correo.</p>
+              <ContactForm client:load endpoint={formEndpoint} fallbackEmail={email} />
+            </div>
+          ) : hasContactChannel ? (
+            <p class="lead">Puedes usar cualquiera de los canales de esta página.</p>
+          ) : (
+            <div class="pending" role="note">
+              <h3>Estamos confirmando nuestros canales</h3>
+              <p>
+                Todavía no hemos publicado canales de contacto oficiales. Los incorporaremos aquí en cuanto estén
+                confirmados, para que puedas escribirnos con seguridad.
+              </p>
+              <p>
+                Mientras tanto, puedes conocer <a href="/que-hacemos">lo que hacemos</a> y revisar las
+                <a href="/actividades"> actividades documentadas</a>.
+              </p>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .info {
+    display: grid;
+    width: 100%;
+    margin: 0;
+    max-width: 44rem;
+  }
+  .info > div {
+    display: grid;
+    gap: var(--space-1) var(--space-5);
+    padding-block: var(--space-4);
+    border-top: 1px solid var(--line);
+  }
+  .info > div:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  @media (min-width: 40rem) {
+    .info > div {
+      grid-template-columns: 12rem 1fr;
+    }
+  }
+  dt {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent-text);
+  }
+  dd {
+    margin: 0;
+  }
+  .channel {
+    display: grid;
+    gap: var(--space-4);
+    width: 100%;
+  }
+  .pending {
+    display: grid;
+    gap: var(--space-3);
+    max-width: 40rem;
+    padding: var(--space-6);
+    border: 2px solid var(--ink);
+    border-radius: var(--radius-lg);
+    background: var(--yellow-soft);
+  }
+</style>

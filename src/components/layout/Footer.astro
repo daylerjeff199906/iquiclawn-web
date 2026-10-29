@@ -1,0 +1,149 @@
+---
+import { organization } from '../../data/organization';
+import { footerExplore, footerLegal } from '../../data/navigation';
+import Wordmark from '../ui/Wordmark.astro';
+
+const { social } = organization;
+---
+
+<footer class="site-footer section--dark">
+  <div class="container">
+    <a class="giant" href="/contacto">
+      <span class="giant__text">¿Hablamos?</span>
+      <svg class="giant__arrow" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+        <circle cx="24" cy="24" r="23" fill="none" stroke="currentColor" stroke-width="2"></circle>
+        <path d="M16 32 32 16M19 16h13v13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+      <span class="visually-hidden">Ir a la página de contacto</span>
+    </a>
+
+    <div class="grid">
+      <div class="about">
+        <a class="brand" href="/" aria-label={`${organization.name}, ir al inicio`}><Wordmark light /></a>
+        <p>{organization.shortDescription}</p>
+        <p class="label place">{organization.location.locality}, {organization.location.region}, {organization.location.country}</p>
+      </div>
+
+      <nav aria-label="Explorar el sitio">
+        <h2>Explorar</h2>
+        <ul>
+          {footerExplore.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+        </ul>
+      </nav>
+
+      <nav aria-label="Información del sitio">
+        <h2>Información</h2>
+        <ul>
+          {footerLegal.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+        </ul>
+      </nav>
+
+      {
+        social.length > 0 && (
+          <nav aria-label="Redes sociales">
+            <h2>Redes</h2>
+            <ul>
+              {social.map((item) => (
+                <li>
+                  <a href={item.url} rel="noopener noreferrer" target="_blank">
+                    {item.label}
+                    <span class="visually-hidden"> (se abre en una pestaña nueva)</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )
+      }
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: auto;
+    padding-block: var(--space-8) var(--space-7);
+  }
+  .giant {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    padding-bottom: var(--space-7);
+    border-bottom: 1px solid var(--line);
+    color: var(--cream);
+    text-decoration: none;
+  }
+  .giant__text {
+    font-family: var(--font-display);
+    min-width: 0;
+    font-size: clamp(3rem, 0.4rem + 12vw, 11rem);
+    line-height: 0.95;
+    text-transform: uppercase;
+  }
+  .giant__arrow {
+    flex: none;
+    width: clamp(2.75rem, 8vw, 6rem);
+    color: var(--coral);
+    transition: transform var(--dur) var(--ease);
+  }
+  .giant:hover {
+    color: var(--cream);
+  }
+  .giant:hover .giant__text {
+    color: var(--coral);
+  }
+  .giant:hover .giant__arrow {
+    transform: translate(4px, -4px);
+  }
+
+  .grid {
+    display: grid;
+    gap: var(--space-7);
+    padding-top: var(--space-7);
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  }
+  .about {
+    grid-column: 1 / -1;
+    max-width: 26rem;
+    display: grid;
+    gap: var(--space-4);
+    color: var(--text-muted);
+  }
+  @media (min-width: 52rem) {
+    .about {
+      grid-column: span 2;
+    }
+  }
+  .brand {
+    justify-self: start;
+    text-decoration: none;
+  }
+  .place {
+    color: var(--cream);
+  }
+  h2 {
+    margin-bottom: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--yellow);
+  }
+  ul {
+    list-style: none;
+    display: grid;
+    gap: 0.1rem;
+  }
+  li a {
+    display: inline-block;
+    padding-block: 0.4rem;
+    color: var(--cream);
+    text-decoration-color: rgb(255 248 237 / 0.4);
+  }
+  li a:hover {
+    color: var(--yellow);
+    text-decoration-color: var(--yellow);
+  }
+</style>

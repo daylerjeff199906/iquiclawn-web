@@ -1,0 +1,257 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { nosotrosFotos } from '../lib/images';
+import PageHeader from '../components/ui/PageHeader.astro';
+import SectionLabel from '../components/ui/SectionLabel.astro';
+import CtaBand from '../components/sections/CtaBand.astro';
+import { organization } from '../data/organization';
+import { valores } from '../data/valores';
+import { hitos } from '../data/hitos';
+import { equipo } from '../data/equipo';
+---
+
+<BaseLayout
+  title="Nosotros"
+  description="Quiénes somos, qué nos mueve y cómo nos relacionamos con Iquitos: Iquiclown, voluntariado artístico y social de Loreto."
+>
+  <PageHeader
+    title="Nosotros"
+    intro="Iquiclown es una organización de voluntariado artístico y social de Iquitos, Loreto, Perú, vinculada al clown comunitario y hospitalario."
+    eyebrow="Quiénes somos"
+    crumbs={[{ label: 'Nosotros' }]}
+  />
+
+  <section class="section" aria-labelledby="quienes">
+    <div class="container row">
+      <div class="row__label"><SectionLabel>Quiénes somos</SectionLabel></div>
+      <div class="row__body">
+        <h2 id="quienes" class="statement">Arte, juego y responsabilidad social <em>para encontrarnos.</em></h2>
+        <div class="cols">
+          <p>
+            Nuestra propuesta combina arte, juego, sensibilidad, acompañamiento y responsabilidad social. Usamos el
+            lenguaje del clown para encontrarnos con las personas, escuchar y compartir momentos de ligereza y de
+            cercanía.
+          </p>
+          <p>
+            Somos voluntarias y voluntarios que ponemos el arte al servicio del encuentro. Trabajamos desde dos
+            caminos: el clown comunitario y el clown hospitalario.{' '}
+            <a href="/que-hacemos">Conoce nuestras líneas de trabajo</a>.
+          </p>
+        </div>
+        <ul class="photos">
+          {
+            nosotrosFotos.map((foto, i) => (
+              <li class:list={['photo', 'tape', i % 2 === 0 ? 'tilt-l' : 'tilt-r']}>
+                <Image src={foto.image} alt={foto.alt} widths={[400, 640, 900]} sizes="(min-width: 52rem) 32vw, 90vw" loading="lazy" />
+              </li>
+            ))
+          }
+        </ul>
+        <p class="photo-credit">Fotografías: archivo de Iquiclown.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--green" aria-labelledby="valores">
+    <div class="container row">
+      <div class="row__label"><SectionLabel>Propósito y valores</SectionLabel></div>
+      <div class="row__body">
+        <h2 id="valores" class="statement">Lo que nos guía.</h2>
+        <p class="lead">Creemos que el arte y el juego son medios de encuentro. Estos son los valores desde los que trabajamos.</p>
+        <ul class="values">
+          {
+            valores.map((valor, i) => (
+              <li class="value">
+                <span class="value__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <h3>{valor.titulo}</h3>
+                <p>{valor.texto}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="iquitos">
+    <div class="container row">
+      <div class="row__label"><SectionLabel>Nuestro lugar</SectionLabel></div>
+      <div class="row__body">
+        <h2 id="iquitos" class="statement">Iquitos, en la <em>Amazonía</em> peruana.</h2>
+        <div class="cols">
+          <p>
+            Iquiclown nace y trabaja en Iquitos, capital de la región Loreto, una ciudad amazónica rodeada de ríos y
+            selva. Esa identidad está presente en nuestra manera de mirar, de jugar y de relacionarnos.
+          </p>
+          <p>
+            Queremos aportar a la vida cultural y comunitaria de la ciudad, participar en sus citas y aprender de
+            quienes la habitan. Lo hacemos desde el respeto, sin mirar a nadie con lástima y reconociendo la dignidad
+            de cada persona.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--yellow" aria-labelledby="trayectoria">
+    <div class="container row">
+      <div class="row__label"><SectionLabel>Trayectoria</SectionLabel></div>
+      <div class="row__body">
+        <h2 id="trayectoria" class="statement">Un camino que seguimos documentando.</h2>
+        <p class="lead">
+          Desde {organization.referenceYear} existen referencias públicas de nuestro trabajo. Aquí reunimos solo los
+          hitos que podemos verificar.
+        </p>
+        <ol class="timeline">
+          {
+            hitos.map((hito) => (
+              <li>
+                <p class="timeline__date" aria-hidden={hito.fecha ? undefined : 'true'}>{hito.fecha ?? ''}</p>
+                <div>
+                  <h3>{hito.titulo}</h3>
+                  <p>{hito.texto}</p>
+                  {hito.href && (
+                    <p>
+                      <a href={hito.href}>Ver la ficha de la actividad</a>
+                    </p>
+                  )}
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  {
+    equipo.length > 0 && (
+      <section class="section" aria-labelledby="equipo">
+        <div class="container row">
+          <div class="row__label"><SectionLabel>Equipo</SectionLabel></div>
+          <div class="row__body">
+            <h2 id="equipo" class="statement">Quienes hacemos Iquiclown.</h2>
+            <ul class="team">
+              {equipo.map((p) => (
+                <li>
+                  <h3>{p.nombre}</h3>
+                  <p>{p.cargo}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <CtaBand
+    title="¿Nos conocemos?"
+    text="Puedes conocer lo que hacemos, seguir nuestras actividades o conversar sobre cómo participar."
+    primary={{ label: 'Participa', href: '/participa' }}
+    secondary={{ label: 'Ver actividades', href: '/actividades' }}
+  />
+</BaseLayout>
+
+<style>
+  .photos {
+    list-style: none;
+    display: grid;
+    gap: var(--space-6);
+    width: 100%;
+    margin-top: var(--space-4);
+  }
+  @media (min-width: 40rem) {
+    .photos {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-5);
+    }
+  }
+  .photo :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
+  .tilt-l {
+    transform: rotate(-1.5deg);
+  }
+  .tilt-r {
+    transform: rotate(1.5deg);
+  }
+  .photo-credit {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  .values {
+    list-style: none;
+    display: grid;
+    width: 100%;
+    gap: 0;
+  }
+  .value {
+    display: grid;
+    gap: var(--space-2) var(--space-5);
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--line);
+  }
+  .value:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  @media (min-width: 48rem) {
+    .value {
+      grid-template-columns: 3rem minmax(0, 1fr) minmax(0, 1.2fr);
+      align-items: baseline;
+    }
+  }
+  .value__num {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--cream);
+  }
+  .value h3 {
+    font-size: clamp(1.4rem, 1.1rem + 1vw, 2rem);
+    letter-spacing: -0.03em;
+  }
+  .value p {
+    color: var(--text-muted);
+  }
+
+  .timeline {
+    list-style: none;
+    display: grid;
+    width: 100%;
+  }
+  .timeline li {
+    display: grid;
+    gap: var(--space-2) var(--space-5);
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--line);
+  }
+  .timeline li:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  @media (min-width: 48rem) {
+    .timeline li {
+      grid-template-columns: 11rem 1fr;
+    }
+  }
+  .timeline__date {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 2rem + 2vw, 3.75rem);
+    line-height: 1;
+    color: var(--ink);
+  }
+  .timeline h3 {
+    margin-bottom: var(--space-2);
+  }
+  .team {
+    list-style: none;
+    display: grid;
+    gap: var(--space-5);
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    width: 100%;
+  }
+</style>

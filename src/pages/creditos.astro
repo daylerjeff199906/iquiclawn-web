@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/ui/PageHeader.astro';
+import { getActividades, getNovedades } from '../lib/content';
+
+const withCredits = [
+  ...(await getActividades()).map((a) => ({ titulo: a.data.titulo, href: `/actividades/${a.id}`, creditos: a.data.creditos })),
+  ...(await getNovedades()).map((n) => ({ titulo: n.data.titulo, href: `/novedades/${n.id}`, creditos: n.data.creditos })),
+].filter((x) => x.creditos);
+---
+
+<BaseLayout
+  title="Créditos de imágenes"
+  description="Autoría y autorizaciones de las imágenes y recursos gráficos utilizados en el sitio de Iquiclown."
+>
+  <PageHeader
+    title="Créditos de imágenes"
+    intro="Reconocemos a quienes hacen posibles las imágenes y recursos de este sitio."
+    crumbs={[{ label: 'Créditos de imágenes' }]}
+  />
+
+  <section class="section">
+    <div class="container--narrow prose">
+      <h2>Fotografías</h2>
+      {
+        withCredits.length > 0 ? (
+          <ul>
+            {withCredits.map((x) => (
+              <li>
+                <a href={x.href}>{x.titulo}</a>: {x.creditos}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>
+            Por ahora el sitio no publica fotografías. Cuando se incorporen, cada una se publicará con autorización de
+            uso y con el crédito de quien la tomó.
+          </p>
+        )
+      }
+
+      <h2>Recursos gráficos</h2>
+      <p>
+        Las composiciones y formas decorativas del sitio son ilustraciones gráficas creadas para esta web. No
+        representan personas ni lugares reales.
+      </p>
+
+      <h2>Tipografías</h2>
+      <p>
+        Titulares en Anton, textos en Figtree y etiquetas en DM Mono, todas con licencia SIL Open Font License, distribuidas a través de
+        Fontsource.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .container--narrow {
+    width: min(100% - 2 * var(--gutter), var(--container-narrow));
+    margin-inline: auto;
+  }
+</style>

@@ -1,0 +1,74 @@
+---
+import type { Novedad } from '../../lib/content';
+import { formatDate, isoDate } from '../../lib/content';
+import { tiposNovedad } from '../../data/categorias';
+
+interface Props {
+  novedad: Novedad;
+}
+const { novedad } = Astro.props;
+const { data, id } = novedad;
+---
+
+<article class="row-news">
+  <p class="date">
+    <time datetime={isoDate(data.fecha)}>{formatDate(data.fecha)}</time>
+  </p>
+  <div class="text">
+    <p class="kind">{tiposNovedad[data.tipo]}</p>
+    <h3><a href={`/novedades/${id}`}>{data.titulo}</a></h3>
+    <p class="summary">{data.resumen}</p>
+  </div>
+</article>
+
+<style>
+  .row-news {
+    display: grid;
+    gap: var(--space-2) var(--space-6);
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--line);
+    position: relative;
+  }
+  .row-news:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  @media (min-width: 48rem) {
+    .row-news {
+      grid-template-columns: 11rem 1fr;
+    }
+  }
+  .date,
+  .kind {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+  .kind {
+    color: var(--accent-text);
+  }
+  h3 {
+    margin-block: var(--space-1) var(--space-2);
+    font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.25rem);
+    letter-spacing: -0.03em;
+  }
+  h3 a {
+    color: var(--heading);
+    text-decoration-color: transparent;
+  }
+  h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  h3 a:hover {
+    text-decoration-color: currentColor;
+    color: var(--heading);
+  }
+  .summary {
+    color: var(--text-muted);
+    max-width: 38rem;
+  }
+</style>

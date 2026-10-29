@@ -1,0 +1,123 @@
+.contact-form {
+  display: grid;
+  gap: var(--space-5);
+  max-width: 36rem;
+}
+.field {
+  display: grid;
+  gap: var(--space-2);
+}
+.field label {
+  font-weight: 700;
+}
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.7rem 0.9rem;
+  border: 2px solid rgb(36 51 45 / 0.55);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  transition: border-color var(--dur) var(--ease);
+}
+.field textarea {
+  resize: vertical;
+}
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-color: var(--green);
+}
+.field [aria-invalid='true'] {
+  border-color: var(--error);
+  border-width: 3px;
+}
+.field__error {
+  display: flex;
+  gap: 0.4rem;
+  color: var(--error);
+  font-weight: 500;
+  font-size: var(--text-sm);
+}
+/* El error no depende solo del color: lleva icono textual. */
+.field__error::before {
+  content: '⚠';
+}
+
+.contact-form__summary,
+.contact-form__status {
+  padding: var(--space-5);
+  border-radius: var(--radius);
+  border-left: 6px solid var(--error);
+  background: #fdecec;
+  color: var(--ink);
+}
+.contact-form__summary h3,
+.contact-form__status h3 {
+  margin-bottom: var(--space-2);
+  font-size: var(--text-lg);
+  color: var(--error);
+}
+.contact-form__summary ul {
+  padding-left: 1.2rem;
+}
+.contact-form__summary a {
+  color: var(--error);
+}
+.contact-form__status--ok {
+  border-left-color: var(--green);
+  background: #e6f3ee;
+}
+.contact-form__status--ok h3 {
+  color: var(--green-deep);
+}
+.contact-form__summary:focus,
+.contact-form__status:focus {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.contact-form__trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.contact-form__privacy {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+.contact-form__submit {
+  justify-self: start;
+  min-height: 3rem;
+  padding: 0.7rem 1.75rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--green);
+  color: var(--cream);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.contact-form__submit:hover:not(:disabled) {
+  background: var(--green-deep);
+  transform: translateY(-2px);
+}
+.contact-form__submit:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+.contact-form__link {
+  margin-top: var(--space-3);
+  padding: 0.5rem 0;
+  border: 0;
+  background: none;
+  color: var(--green);
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}

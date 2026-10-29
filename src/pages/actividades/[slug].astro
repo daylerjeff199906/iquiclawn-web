@@ -1,0 +1,160 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/ui/PageHeader.astro';
+import PostMeta from '../../components/ui/PostMeta.astro';
+import Gallery from '../../components/ui/Gallery.astro';
+import ActivityCard from '../../components/ui/ActivityCard.astro';
+import CtaBand from '../../components/sections/CtaBand.astro';
+import { getActividades, fechaActividad, isoDate } from '../../lib/content';
+import { categorias } from '../../data/categorias';
+
+export const getStaticPaths = (async () => {
+  const actividades = await getActividades();
+  return actividades.map((actividad) => ({ params: { slug: actividad.id }, props: { actividad, todas: actividades } }));
+}) satisfies GetStaticPaths;
+
+const { actividad, todas } = Astro.props;
+const { data } = actividad;
+const { Content } = await render(actividad);
+
+const relacionadas = (
+  data.relacionadas.length
+    ? data.relacionadas.map((id) => todas.find((a) => a.id === id)).filter((a) => a !== undefined)
+    : todas.filter((a) => a.id !== actividad.id && a.data.categoria === data.categoria)
+).slice(0, 3);
+
+const ogImage = data.imagen && Astro.site ? data.imagen.src : undefined;
+---
+
+<BaseLayout title={data.titulo} description={data.resumen} image={ogImage}>
+  <PageHeader
+    title={data.titulo}
+    long
+    eyebrow="Actividad"
+    crumbs={[{ label: 'Actividades', href: '/actividades' }, { label: data.titulo.length > 38 ? `${data.titulo.slice(0, 36).trimEnd()}…` : data.titulo }]}
+  >
+    <PostMeta
+      category={categorias[data.categoria]}
+      dateLabel={fechaActividad(data)}
+      dateIso={data.fecha ? isoDate(data.fecha) : undefined}
+      place={data.lugar}
+    />
+  </PageHeader>
+
+  <article class="section">
+    <div class="container--narrow">
+      {
+        data.imagen && (
+          <figure class="cover">
+            <Image src={data.imagen} alt={data.imagenAlt ?? ''} widths={[640, 960, 1280]} sizes="(min-width: 48rem) 44rem, 100vw" loading="eager" />
+          </figure>
+        )
+      }
+      <p class="lead summary">{data.resumen}</p>
+      <div class="prose">
+        <Content />
+      </div>
+
+      {
+        data.fuentes.length > 0 && (
+          <aside class="credits" aria-labelledby="fuentes">
+            <h2 id="fuentes">Fuentes</h2>
+            <ul>
+              {data.fuentes.map((f) => (
+                <li>
+                  {f.url ? (
+                    <a href={f.url} rel="noopener noreferrer" target="_blank">
+                      {f.titulo}
+                      <span class="visually-hidden"> (se abre en una pestaña nueva)</span>
+                    </a>
+                  ) : (
+                    f.titulo
+                  )}
+                </li>
+              ))}
+            </ul>
+          </aside>
+        )
+      }
+      {data.creditos && <p class="credit-line">Créditos: {data.creditos}</p>}
+    </div>
+
+    {
+      data.galeria.length > 0 && (
+        <div class="container gallery-wrap">
+          <h2>Galería</h2>
+          <Gallery items={data.galeria} label={`Galería de ${data.titulo}`} />
+        </div>
+      )
+    }
+  </article>
+
+  {
+    relacionadas.length > 0 && (
+      <section class="section section--alt" aria-labelledby="rel">
+        <div class="container">
+          <h2 id="rel" class="rel-title">Actividades relacionadas</h2>
+          <ul class="activity-grid">
+            {relacionadas.map((a) => (
+              <li><ActivityCard actividad={a} /></li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <CtaBand
+    title="Conoce más de nuestro trabajo"
+    text="Revisa las líneas de trabajo de Iquiclown o vuelve al registro de actividades."
+    primary={{ label: 'Qué hacemos', href: '/que-hacemos' }}
+    secondary={{ label: 'Todas las actividades', href: '/actividades' }}
+  />
+</BaseLayout>
+
+<style>
+  .container--narrow {
+    width: min(100% - 2 * var(--gutter), var(--container-narrow));
+    margin-inline: auto;
+  }
+  .cover {
+    margin: 0 0 var(--space-6);
+  }
+  .cover :global(img) {
+    width: 100%;
+    border-radius: var(--radius-lg);
+  }
+  .summary {
+    margin-bottom: var(--space-6);
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .credits {
+    margin-top: var(--space-7);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line);
+  }
+  .credits h2 {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-2);
+  }
+  .credits ul {
+    padding-left: 1.2rem;
+  }
+  .credit-line {
+    margin-top: var(--space-4);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .gallery-wrap {
+    margin-top: var(--space-8);
+    display: grid;
+    gap: var(--space-5);
+  }
+  .rel-title {
+    margin-bottom: var(--space-6);
+  }
+</style>

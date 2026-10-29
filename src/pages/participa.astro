@@ -1,0 +1,154 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/ui/PageHeader.astro';
+import SectionLabel from '../components/ui/SectionLabel.astro';
+import Button from '../components/ui/Button.astro';
+
+const formas = [
+  {
+    titulo: 'Voluntariado',
+    texto:
+      'Si te interesa sumarte al voluntariado artístico y social de Iquiclown, puedes hacernos saber tu interés para que te tengamos presente en futuras convocatorias.',
+  },
+  {
+    titulo: 'Colaboración artística',
+    texto:
+      'Si eres artista o facilitas espacios de formación y quieres proponer algo en común, cuéntanos tu idea y tu experiencia.',
+  },
+  {
+    titulo: 'Colaboración institucional',
+    texto:
+      'Si representas a una organización, un colectivo o una institución y ves posibilidades de trabajar juntas, puedes escribirnos para conversar.',
+  },
+  {
+    titulo: 'Apoyo en materiales u otras necesidades',
+    texto:
+      'Si quieres apoyar con materiales, espacios u otros recursos, consúltanos. Te responderemos con las necesidades que estén verificadas en ese momento.',
+  },
+];
+---
+
+<BaseLayout
+  title="Participa"
+  description="Formas de acercarse a Iquiclown: voluntariado, colaboración artística o institucional y apoyo. Consulta por futuras oportunidades."
+>
+  <PageHeader
+    title="Participa"
+    intro="Hay distintas maneras de acercarse a Iquiclown. Aquí te contamos cuáles son y cómo consultar."
+    eyebrow="Súmate"
+    crumbs={[{ label: 'Participa' }]}
+  />
+
+  <section class="section section--yellow section--tight" aria-labelledby="estado">
+    <div class="container row">
+      <div class="row__label"><SectionLabel>Estado actual</SectionLabel></div>
+      <div class="row__body">
+        <h2 id="estado" class="statement">Por ahora no hay una convocatoria abierta.</h2>
+        <p class="lead status-text">
+          Actualmente no tenemos una convocatoria vigente publicada. Eso no impide que nos escribas: puedes consultar
+          por futuras oportunidades y, cuando se abra una convocatoria, la comunicaremos en la sección de novedades.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="formas">
+    <div class="container row">
+      <div class="row__label"><SectionLabel>Formas de acercarse</SectionLabel></div>
+      <div class="row__body">
+        <h2 id="formas" class="statement">Puedes consultarnos por…</h2>
+        <p class="lead">Estas son las áreas en las que puedes escribirnos. Cada consulta se atiende de manera individual.</p>
+        <ol class="ways">
+          {
+            formas.map((f, i) => (
+              <li>
+                <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <h3>{f.titulo}</h3>
+                <p>{f.texto}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--green" aria-labelledby="como">
+    <div class="container row">
+      <div class="row__label"><SectionLabel>Cómo consultar</SectionLabel></div>
+      <div class="row__body">
+        <h2 id="como" class="statement">Escríbenos desde la página de contacto.</h2>
+        <div class="cols">
+          <p>
+            En la página de contacto encontrarás los canales confirmados de Iquiclown. Al escribir, puedes contarnos
+            qué te interesa y, si quieres, algo sobre ti y tu experiencia.
+          </p>
+          <p>
+            Escribirnos no implica una admisión inmediata ni una promesa de participación. Las condiciones de cada
+            oportunidad se informarán cuando estén confirmadas.
+          </p>
+        </div>
+        <Button href="/contacto" variant="light" arrow>Ir a contacto</Button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight" aria-labelledby="mientras">
+    <div class="container row">
+      <div class="row__label"><SectionLabel>Mientras tanto</SectionLabel></div>
+      <div class="row__body">
+        <h2 id="mientras" class="statement">Conócenos.</h2>
+        <p class="lead">
+          Puedes ver cómo entendemos el clown comunitario y hospitalario, y revisar las actividades documentadas.
+        </p>
+        <div class="links">
+          <Button href="/que-hacemos" variant="outline" arrow>Qué hacemos</Button>
+          <Button href="/actividades" variant="outline">Actividades</Button>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .status-text {
+    color: var(--ink);
+  }
+  .ways {
+    list-style: none;
+    display: grid;
+    width: 100%;
+  }
+  .ways li {
+    display: grid;
+    gap: var(--space-2) var(--space-5);
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--line);
+  }
+  .ways li:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  @media (min-width: 48rem) {
+    .ways li {
+      grid-template-columns: 3rem minmax(0, 1fr) minmax(0, 1.3fr);
+      align-items: baseline;
+    }
+  }
+  .num {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--accent-text);
+  }
+  .ways h3 {
+    font-size: clamp(1.4rem, 1.1rem + 1vw, 2rem);
+    letter-spacing: -0.03em;
+  }
+  .ways p {
+    color: var(--text-muted);
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+</style>

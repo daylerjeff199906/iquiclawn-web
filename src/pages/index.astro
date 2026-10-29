@@ -1,0 +1,415 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/ui/Button.astro';
+import HeroCollage from '../components/ui/HeroCollage.astro';
+import ValueBands from '../components/ui/ValueBands.astro';
+import SectionLabel from '../components/ui/SectionLabel.astro';
+import PostMeta from '../components/ui/PostMeta.astro';
+import NewsRow from '../components/ui/NewsRow.astro';
+import CtaBand from '../components/sections/CtaBand.astro';
+import { organization } from '../data/organization';
+import { lineas } from '../data/lineas';
+import { categorias } from '../data/categorias';
+import { getActividades, getNovedades, fechaActividad, isoDate } from '../lib/content';
+
+const actividades = await getActividades();
+const destacada = actividades.find((a) => a.data.destacada);
+const otras = actividades.filter((a) => a !== destacada).slice(0, 4);
+const novedades = (await getNovedades()).slice(0, 3);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: organization.name,
+  description: organization.description,
+  ...(Astro.site ? { url: Astro.site.href } : {}),
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: organization.location.locality,
+    addressRegion: organization.location.region,
+    addressCountry: organization.location.countryCode,
+  },
+  ...(organization.social.length ? { sameAs: organization.social.map((s) => s.url) } : {}),
+};
+---
+
+<BaseLayout
+  title="Inicio"
+  description="Iquiclown es una organización de voluntariado artístico y social de Iquitos, Loreto, vinculada al clown comunitario y hospitalario. Arte, juego y encuentro."
+  jsonLd={jsonLd}
+>
+  <!-- 1. Presentación -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="container">
+      <p class="hero__lead">
+        Organización de voluntariado artístico y social de Iquitos, Loreto, vinculada al clown comunitario y
+        hospitalario.
+      </p>
+
+      <div class="hero__grid">
+        <h1 id="hero-title">
+          <span>El arte y</span>
+          <span>el juego</span>
+          <span class="accent">nos juntan.</span>
+        </h1>
+        <div class="hero__visual">
+          <HeroCollage />
+        </div>
+      </div>
+
+      <div class="hero__foot">
+        <p class="label">Iquitos · Loreto · Perú</p>
+        <div class="hero__actions">
+          <Button href="/nosotros" variant="primary" arrow>Conoce Iquiclown</Button>
+          <Button href="/participa" variant="accent">Participa</Button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Quiénes somos -->
+  <section class="section section--tight" aria-labelledby="about-title">
+    <div class="container row">
+      <div class="row__label"><SectionLabel>Quiénes somos</SectionLabel></div>
+      <div class="row__body">
+        <h2 id="about-title" class="statement">
+          Un colectivo de voluntariado que cree que el arte y el juego <em>nos acercan.</em>
+        </h2>
+        <div class="cols">
+          <p>
+            Combinamos arte, juego, sensibilidad, acompañamiento y responsabilidad social desde Iquitos, en la
+            Amazonía peruana.
+          </p>
+          <p>
+            Nos guían la sinceridad y la sensibilidad, la libertad de expresión, la igualdad y el respeto, y el
+            compromiso con la comunidad.
+          </p>
+        </div>
+        <Button href="/nosotros" variant="outline" arrow>Valores y trayectoria</Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Bandas de color -->
+  <ValueBands />
+
+  <!-- 4. Líneas de trabajo -->
+  <section class="section" aria-labelledby="lines-title">
+    <div class="container">
+      <div class="row lines__head">
+        <div class="row__label"><SectionLabel>Qué hacemos</SectionLabel></div>
+        <div class="row__body">
+          <h2 id="lines-title" class="statement">Cuatro maneras de llevar el juego al encuentro.</h2>
+        </div>
+      </div>
+
+      <ol class="giant">
+        {
+          lineas.map((linea, i) => (
+            <li class="giant__item">
+              <span class="giant__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="giant__title">
+                <a href={linea.detalle ? `/que-hacemos/${linea.slug}` : `/que-hacemos#${linea.slug}`}>{linea.titulo}</a>
+              </h3>
+              <p class="giant__text">{linea.resumen}</p>
+              <svg class="giant__arrow" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+                <circle cx="24" cy="24" r="23" fill="none" stroke="currentColor" stroke-width="2"></circle>
+                <path d="M16 32 32 16M19 16h13v13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </li>
+          ))
+        }
+      </ol>
+
+      <div class="lines__more">
+        <Button href="/que-hacemos" variant="outline" arrow>Ver todas las líneas de trabajo</Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Actividad destacada -->
+  {
+    destacada && (
+      <section class="section section--green" aria-labelledby="featured-title">
+        <div class="container row">
+          <div class="row__label"><SectionLabel>Últimas actividades</SectionLabel></div>
+          <div class="row__body">
+            <h2 id="featured-title" class="statement">{destacada.data.titulo}</h2>
+            <PostMeta
+              category={categorias[destacada.data.categoria]}
+              dateLabel={fechaActividad(destacada.data)}
+              dateIso={destacada.data.fecha ? isoDate(destacada.data.fecha) : undefined}
+            />
+            <p class="lead">{destacada.data.resumen}</p>
+            <Button href={`/actividades/${destacada.id}`} variant="light" arrow>Leer la ficha</Button>
+            {destacada.data.imagen && (
+              <figure class="featured__photo tape">
+                <Image
+                  src={destacada.data.imagen}
+                  alt={destacada.data.imagenAlt ?? ''}
+                  widths={[480, 720, 960]}
+                  sizes="(min-width: 52rem) 55vw, 90vw"
+                  loading="lazy"
+                />
+              </figure>
+            )}
+            {otras.length > 0 && (
+              <div class="more">
+                <h3 class="more__title">También en el registro</h3>
+                <ul class="more__list">
+                  {otras.map((a) => (
+                    <li>
+                      <a href={`/actividades/${a.id}`}>{a.data.titulo}</a>
+                      <span>{categorias[a.data.categoria]}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- 6. Novedades -->
+  <section class="section" aria-labelledby="news-title">
+    <div class="container row">
+      <div class="row__label"><SectionLabel>Novedades</SectionLabel></div>
+      <div class="row__body news">
+        <h2 id="news-title" class="statement">Lo último de Iquiclown.</h2>
+        {
+          novedades.length > 0 ? (
+            <div class="news__list">
+              {novedades.map((novedad) => <NewsRow novedad={novedad} />)}
+            </div>
+          ) : (
+            <p class="lead">
+              Todavía no hay novedades publicadas. Cuando haya noticias o comunicados, los encontrarás aquí; mientras
+              tanto, puedes revisar el registro de actividades.
+            </p>
+          )
+        }
+        <div class="news__links">
+          <Button href="/novedades" variant="outline" arrow>Ir a novedades</Button>
+          <Button href="/actividades" variant="outline">Ver actividades</Button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Invitación final -->
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  /* Presentación */
+  .hero {
+    padding-block: var(--space-6) var(--space-8);
+    overflow: hidden;
+  }
+  .hero__lead {
+    max-width: 52rem;
+    margin-bottom: var(--space-6);
+    font-size: clamp(1.5rem, 1rem + 1.9vw, 2.75rem);
+    font-weight: 500;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    color: var(--coral);
+  }
+  .hero__grid {
+    display: grid;
+    gap: var(--space-6);
+    align-items: start;
+  }
+  @media (min-width: 52rem) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 1fr) clamp(16rem, 32vw, 30rem);
+      gap: var(--space-6) var(--space-5);
+    }
+  }
+  h1 {
+    font-size: clamp(3.6rem, 0.6rem + 14vw, 7rem);
+    line-height: 0.92;
+  }
+  @media (min-width: 52rem) {
+    h1 {
+      font-size: clamp(5rem, 0.6rem + 10.5vw, 10rem);
+    }
+  }
+  h1 span {
+    display: block;
+  }
+  h1 .accent {
+    color: var(--coral);
+  }
+  .hero__visual {
+    width: min(100%, 30rem);
+    justify-self: center;
+    padding-top: var(--space-3);
+  }
+  .featured__photo :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
+  .featured__photo {
+    width: min(100%, 44rem);
+    margin: var(--space-4) 0 0;
+    transform: rotate(-1.5deg);
+  }
+  .hero__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4) var(--space-6);
+    margin-top: var(--space-7);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line);
+  }
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .more {
+    width: 100%;
+    margin-top: var(--space-6);
+  }
+  .more__title {
+    margin-bottom: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--yellow);
+  }
+  .more__list {
+    list-style: none;
+  }
+  .more__list li {
+    display: grid;
+    gap: 0.15rem var(--space-5);
+    padding-block: var(--space-3);
+    border-top: 1px solid var(--line);
+  }
+  .more__list li:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  @media (min-width: 40rem) {
+    .more__list li {
+      grid-template-columns: 1fr auto;
+      align-items: baseline;
+    }
+  }
+  .more__list a {
+    font-weight: 700;
+  }
+  .more__list span {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+  }
+
+  /* Líneas de trabajo: lista gigante */
+  .lines__head {
+    margin-bottom: var(--space-7);
+  }
+  .giant {
+    list-style: none;
+    border-bottom: 1px solid var(--line);
+  }
+  .giant__item {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: var(--space-2) var(--space-4);
+    align-items: center;
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--line);
+    transition: background-color var(--dur) var(--ease);
+  }
+  .giant__num {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+  }
+  .giant__title {
+    grid-column: 2;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--text-giant-link);
+    line-height: 0.98;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+  .giant__title a {
+    color: var(--heading);
+    text-decoration: none;
+  }
+  .giant__title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .giant__title a:focus-visible {
+    outline: none;
+  }
+  .giant__item:has(a:focus-visible) {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
+  .giant__text {
+    grid-column: 2;
+    max-width: 34rem;
+    color: var(--text-muted);
+  }
+  .giant__arrow {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    width: clamp(2.25rem, 5vw, 3.5rem);
+    color: var(--ink);
+    transition: transform var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+  .giant__item:hover .giant__title a {
+    color: var(--coral-deep);
+  }
+  .giant__item:hover .giant__arrow {
+    color: var(--coral-deep);
+    transform: translate(3px, -3px);
+  }
+  @media (min-width: 62rem) {
+    .giant__item {
+      grid-template-columns: 4rem minmax(0, 2.4fr) minmax(0, 1fr) auto;
+      gap: var(--space-5);
+    }
+    .giant__title {
+      grid-column: 2;
+    }
+    .giant__text {
+      grid-column: 3;
+    }
+    .giant__arrow {
+      grid-column: 4;
+      grid-row: auto;
+    }
+  }
+  .lines__more {
+    margin-top: var(--space-6);
+  }
+
+  /* Novedades */
+  .news__list {
+    width: 100%;
+  }
+  .news__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+</style>

@@ -1,0 +1,149 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/ui/PageHeader.astro';
+import SectionLabel from '../../components/ui/SectionLabel.astro';
+import CtaBand from '../../components/sections/CtaBand.astro';
+import { lineas } from '../../data/lineas';
+---
+
+<BaseLayout
+  title="Qué hacemos"
+  description="Las líneas de trabajo de Iquiclown: clown comunitario, clown hospitalario, formación y talleres, y participación cultural y comunitaria en Iquitos."
+>
+  <PageHeader
+    title="Qué hacemos"
+    intro="Cuatro líneas de trabajo unidas por una misma idea: el arte y el juego como medios de encuentro."
+    eyebrow="Líneas de trabajo"
+    tone="yellow"
+    crumbs={[{ label: 'Qué hacemos' }]}
+  />
+
+  <div class="container jump">
+    <nav aria-label="Líneas de trabajo">
+      <ul>
+        {lineas.map((l) => <li><a href={`#${l.slug}`}>{l.titulo}</a></li>)}
+      </ul>
+    </nav>
+  </div>
+
+  {
+    lineas.map((linea, i) => (
+      <section
+        id={linea.slug}
+        class:list={['section', { 'section--alt': i % 2 === 1 }]}
+        aria-labelledby={`${linea.slug}-t`}
+      >
+        <div class="container row">
+          <div class="row__label"><SectionLabel>{String(i + 1).padStart(2, '0')} · Línea de trabajo</SectionLabel></div>
+          <div class="row__body">
+            <h2 id={`${linea.slug}-t`} class="title">{linea.titulo}</h2>
+            <p class="lead">{linea.resumen}</p>
+            <dl class="facts">
+              <div>
+                <dt>En qué consiste</dt>
+                <dd>{linea.enQueConsiste}</dd>
+              </div>
+              <div>
+                <dt>Cómo se desarrolla</dt>
+                <dd>{linea.comoSeDesarrolla}</dd>
+              </div>
+              <div>
+                <dt>Qué busca aportar</dt>
+                <dd>{linea.queBuscaAportar}</dd>
+              </div>
+              <div>
+                <dt>Cómo conocer sus actividades</dt>
+                <dd>
+                  {linea.comoConocerla}{' '}
+                  {linea.detalle ? (
+                    <a href={`/que-hacemos/${linea.slug}`}>Leer más sobre {linea.titulo.toLowerCase()}</a>
+                  ) : (
+                    <a href="/actividades/festival-de-belen">Ver la ficha del Festival de Belén</a>
+                  )}
+                </dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <CtaBand
+    title="¿Qué hemos hecho?"
+    text="El registro de actividades reúne las acciones documentadas de Iquiclown."
+    primary={{ label: 'Ver actividades', href: '/actividades' }}
+    secondary={{ label: 'Participa', href: '/participa' }}
+  />
+</BaseLayout>
+
+<style>
+  .jump {
+    padding-block: var(--space-5) 0;
+  }
+  .jump ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+  }
+  .jump a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0.4rem 1rem;
+    border: 2px solid var(--ink);
+    border-radius: var(--radius-btn);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .jump a:hover {
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  .title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 0.94;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    font-size: clamp(2.75rem, 0.8rem + 7vw, 6.5rem);
+  }
+  .facts {
+    display: grid;
+    gap: 0;
+    width: 100%;
+    margin: 0;
+  }
+  .facts > div {
+    display: grid;
+    gap: var(--space-2) var(--space-5);
+    padding-block: var(--space-4);
+    border-top: 1px solid var(--line);
+  }
+  .facts > div:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  @media (min-width: 48rem) {
+    .facts > div {
+      grid-template-columns: 13rem 1fr;
+    }
+  }
+  dt {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent-text);
+  }
+  dd {
+    margin: 0;
+    max-width: 38rem;
+  }
+</style>

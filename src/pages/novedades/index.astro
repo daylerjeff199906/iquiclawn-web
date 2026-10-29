@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/ui/PageHeader.astro';
+import NewsRow from '../../components/ui/NewsRow.astro';
+import EmptyState from '../../components/ui/EmptyState.astro';
+import Button from '../../components/ui/Button.astro';
+import { getNovedades } from '../../lib/content';
+
+const novedades = await getNovedades();
+---
+
+<BaseLayout
+  title="Novedades"
+  description="Noticias, anuncios y comunicados de Iquiclown, organización de voluntariado artístico y social de Iquitos."
+>
+  <PageHeader
+    title="Novedades"
+    intro="Noticias, anuncios y comunicados. Para el registro de acciones realizadas o programadas, visita la sección de actividades."
+    eyebrow="Noticias y comunicados"
+    tone="yellow"
+    crumbs={[{ label: 'Novedades' }]}
+  />
+
+  <section class="section" aria-label="Listado de novedades">
+    <div class="container narrow">
+      {
+        novedades.length === 0 ? (
+          <EmptyState
+            title="Aún no hay novedades publicadas"
+            text="Cuando Iquiclown publique noticias o comunicados, aparecerán aquí. Mientras tanto, puedes conocer las actividades documentadas."
+          >
+            <Button href="/actividades" variant="outline" arrow>Ver actividades</Button>
+          </EmptyState>
+        ) : (
+          <div>
+            {novedades.map((n) => <NewsRow novedad={n} />)}
+          </div>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .narrow {
+    max-width: 56rem;
+  }
+</style>

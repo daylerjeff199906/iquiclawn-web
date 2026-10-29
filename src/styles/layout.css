@@ -1,0 +1,201 @@
+/* Patrones de composición compartidos */
+.container {
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+}
+.container--narrow {
+  width: min(100% - 2 * var(--gutter), var(--container-narrow));
+  margin-inline: auto;
+}
+
+.section {
+  padding-block: var(--space-9);
+}
+.section--tight {
+  padding-block: var(--space-8);
+}
+.section--alt {
+  background: var(--bg-alt);
+}
+
+/* Fondos a sangre. En oscuro, los textos pasan a crema y los enlaces a amarillo. */
+.section--dark,
+.section--green {
+  --heading: var(--cream);
+  --text: var(--cream);
+  --text-muted: rgb(255 248 237 / 0.86);
+  --on-text: var(--ink);
+  --link: var(--yellow);
+  --focus: var(--yellow);
+  --line: rgb(255 248 237 / 0.28);
+  color: var(--cream);
+}
+.section--dark {
+  background: var(--ink);
+}
+.section--green {
+  --link: var(--cream); /* el amarillo sobre este verde no alcanza 4,5:1 en texto pequeño */
+  background: var(--green);
+}
+.section--dark a:hover,
+.section--green a:hover {
+  color: var(--yellow-soft);
+}
+.section--yellow {
+  --heading: var(--ink);
+  --link: var(--ink);
+  --text-muted: var(--ink);
+  --line: rgb(36 51 45 / 0.3);
+  background: var(--yellow);
+}
+.section--yellow a:hover {
+  color: var(--coral-deep);
+}
+
+/* Etiqueta de sección: punto + texto en mono, como índice editorial. */
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.label::before {
+  content: '';
+  flex: none;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--coral);
+}
+.section--yellow .label::before {
+  background: var(--ink);
+}
+
+/* Fila editorial: etiqueta a la izquierda, contenido a la derecha. */
+.row {
+  display: grid;
+  gap: var(--space-5) var(--gutter);
+}
+@media (min-width: 52rem) {
+  .row {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+  .row > .row__label {
+    grid-column: 1 / span 3;
+    padding-top: 0.5rem;
+  }
+  .row > .row__body {
+    grid-column: 4 / -1;
+  }
+}
+.row__body {
+  display: grid;
+  gap: var(--space-6);
+  align-content: start;
+  justify-items: start;
+}
+
+/* Enunciado grande en sentencia, como las frases de apertura de las referencias. */
+.statement {
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: var(--text-statement);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  color: var(--heading);
+  text-wrap: balance;
+}
+.statement em {
+  font-style: normal;
+  color: var(--coral);
+}
+
+.lead {
+  font-size: var(--text-lg);
+  line-height: 1.6;
+  color: var(--text-muted);
+  max-width: 40rem;
+}
+
+/* Dos columnas de texto pequeño (como "Learn more" en las referencias). */
+.cols {
+  display: grid;
+  gap: var(--space-5) var(--space-6);
+  max-width: 52rem;
+}
+@media (min-width: 40rem) {
+  .cols {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.cols p {
+  max-width: 28rem;
+}
+
+/* Texto largo de lectura */
+.prose {
+  max-width: 40rem;
+}
+.prose > * + * {
+  margin-top: var(--space-4);
+}
+.prose h2 {
+  margin-top: var(--space-7);
+  font-size: var(--text-xl);
+}
+.prose h3 {
+  margin-top: var(--space-6);
+  font-size: var(--text-lg);
+}
+.prose ul,
+.prose ol {
+  padding-left: 1.4rem;
+}
+.prose li + li {
+  margin-top: var(--space-2);
+}
+.prose li::marker {
+  color: var(--coral);
+}
+.prose blockquote {
+  margin-inline: 0;
+  padding-left: var(--space-5);
+  border-left: 4px solid var(--yellow);
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+.prose img {
+  border-radius: var(--radius);
+}
+
+/* Cinta adhesiva decorativa para composiciones tipo collage. */
+.tape {
+  position: relative;
+}
+.tape::before,
+.tape::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  width: 5.5rem;
+  height: 1.6rem;
+  background: rgb(255 248 237 / 0.72);
+  box-shadow: 0 1px 0 rgb(36 51 45 / 0.12);
+  pointer-events: none;
+}
+.tape::before {
+  top: -0.7rem;
+  left: 12%;
+  transform: rotate(-6deg);
+}
+.tape::after {
+  bottom: -0.7rem;
+  right: 10%;
+  transform: rotate(5deg);
+}

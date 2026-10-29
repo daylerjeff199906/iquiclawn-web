@@ -1,0 +1,46 @@
+---
+import { Image } from 'astro:assets';
+import '../../styles/activity-card.css';
+import type { Actividad } from '../../lib/content';
+import { fechaActividad, isoDate } from '../../lib/content';
+import { categorias } from '../../data/categorias';
+import PostMeta from './PostMeta.astro';
+
+interface Props {
+  actividad: Actividad;
+  /** Carga inmediata solo para imágenes visibles en el primer pantallazo. */
+  eager?: boolean;
+}
+const { actividad, eager = false } = Astro.props;
+const { data, id } = actividad;
+---
+
+<article class="activity-card">
+  <div class="activity-card__media">
+    {
+      data.imagen ? (
+        <Image
+          src={data.imagen}
+          alt={data.imagenAlt ?? ''}
+          widths={[360, 560, 800]}
+          sizes="(min-width: 52rem) 33vw, 100vw"
+          loading={eager ? 'eager' : 'lazy'}
+        />
+      ) : (
+        <div class="activity-card__placeholder" aria-hidden="true">
+          <span>{categorias[data.categoria]}</span>
+        </div>
+      )
+    }
+  </div>
+  <div class="activity-card__body">
+    <PostMeta
+      category={categorias[data.categoria]}
+      dateLabel={fechaActividad(data)}
+      dateIso={data.fecha ? isoDate(data.fecha) : undefined}
+    />
+    <h3><a href={`/actividades/${id}`}>{data.titulo}</a></h3>
+    <p>{data.resumen}</p>
+    <span class="activity-card__more" aria-hidden="true">Ver actividad →</span>
+  </div>
+</article>

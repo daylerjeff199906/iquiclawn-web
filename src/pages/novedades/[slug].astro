@@ -1,0 +1,135 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/ui/PageHeader.astro';
+import PostMeta from '../../components/ui/PostMeta.astro';
+import NewsRow from '../../components/ui/NewsRow.astro';
+import { getNovedades, formatDate, isoDate } from '../../lib/content';
+import { tiposNovedad } from '../../data/categorias';
+import { organization } from '../../data/organization';
+
+export const getStaticPaths = (async () => {
+  const novedades = await getNovedades();
+  return novedades.map((novedad) => ({ params: { slug: novedad.id }, props: { novedad, todas: novedades } }));
+}) satisfies GetStaticPaths;
+
+const { novedad, todas } = Astro.props;
+const { data } = novedad;
+const { Content } = await render(novedad);
+const otras = todas.filter((n) => n.id !== novedad.id).slice(0, 3);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'NewsArticle',
+  headline: data.titulo,
+  description: data.resumen,
+  datePublished: isoDate(data.fecha),
+  author: { '@type': 'Organization', name: organization.name },
+};
+---
+
+<BaseLayout
+  title={data.titulo}
+  description={data.resumen}
+  type="article"
+  publishedTime={isoDate(data.fecha)}
+  image={data.imagen && Astro.site ? data.imagen.src : undefined}
+  jsonLd={jsonLd}
+>
+  <PageHeader
+    title={data.titulo}
+    long
+    eyebrow={tiposNovedad[data.tipo]}
+    tone="yellow"
+    crumbs={[{ label: 'Novedades', href: '/novedades' }, { label: data.titulo.length > 38 ? `${data.titulo.slice(0, 36).trimEnd()}…` : data.titulo }]}
+  >
+    <PostMeta dateLabel={formatDate(data.fecha)} dateIso={isoDate(data.fecha)} />
+  </PageHeader>
+
+  <article class="section">
+    <div class="container--narrow">
+      {
+        data.imagen && (
+          <figure class="cover">
+            <Image src={data.imagen} alt={data.imagenAlt ?? ''} widths={[640, 960, 1280]} sizes="(min-width: 48rem) 44rem, 100vw" loading="eager" />
+          </figure>
+        )
+      }
+      <p class="lead summary">{data.resumen}</p>
+      <div class="prose"><Content /></div>
+      {
+        data.fuentes.length > 0 && (
+          <aside class="credits" aria-labelledby="fuentes">
+            <h2 id="fuentes">Fuentes</h2>
+            <ul>
+              {data.fuentes.map((f) => (
+                <li>{f.url ? <a href={f.url} rel="noopener noreferrer" target="_blank">{f.titulo}<span class="visually-hidden"> (se abre en una pestaña nueva)</span></a> : f.titulo}</li>
+              ))}
+            </ul>
+          </aside>
+        )
+      }
+      {data.creditos && <p class="credit-line">Créditos: {data.creditos}</p>}
+      <p class="back"><a href="/novedades">← Todas las novedades</a></p>
+    </div>
+  </article>
+
+  {
+    otras.length > 0 && (
+      <section class="section section--alt" aria-labelledby="mas">
+        <div class="container narrow">
+          <h2 id="mas" class="more-title">Más novedades</h2>
+          <div>{otras.map((n) => <NewsRow novedad={n} />)}</div>
+        </div>
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .container--narrow {
+    width: min(100% - 2 * var(--gutter), var(--container-narrow));
+    margin-inline: auto;
+  }
+  .narrow {
+    max-width: 56rem;
+  }
+  .cover {
+    margin: 0 0 var(--space-6);
+  }
+  .cover :global(img) {
+    width: 100%;
+    border-radius: var(--radius-lg);
+  }
+  .summary {
+    margin-bottom: var(--space-6);
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .credits {
+    margin-top: var(--space-7);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line);
+  }
+  .credits h2 {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-2);
+  }
+  .credits ul {
+    padding-left: 1.2rem;
+  }
+  .credit-line {
+    margin-top: var(--space-4);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .back {
+    margin-top: var(--space-7);
+    font-weight: 700;
+  }
+  .more-title {
+    margin-bottom: var(--space-5);
+  }
+</style>

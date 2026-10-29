@@ -1,0 +1,91 @@
+---
+import { Image } from 'astro:assets';
+import { portadaFotos, portadaCredito } from '../../lib/images';
+
+const [main, topRight, bottomLeft, bottomRight] = portadaFotos;
+const slots = [
+  { foto: main, cls: 'a tape', eager: true, sizes: '(min-width: 52rem) 24vw, 70vw' },
+  { foto: topRight, cls: 'b', eager: true, sizes: '(min-width: 52rem) 14vw, 40vw' },
+  { foto: bottomLeft, cls: 'c', eager: true, sizes: '(min-width: 52rem) 15vw, 45vw' },
+  { foto: bottomRight, cls: 'd tape', eager: true, sizes: '(min-width: 52rem) 15vw, 45vw' },
+];
+---
+
+<figure class="collage">
+  <div class="stage">
+    {
+      slots.map(({ foto, cls, eager, sizes }) => (
+        <div class:list={['shot', cls]}>
+          <Image
+            src={foto.image}
+            alt={foto.alt}
+            widths={[320, 480, 720]}
+            sizes={sizes}
+            loading={eager ? 'eager' : 'lazy'}
+          />
+        </div>
+      ))
+    }
+  </div>
+  <figcaption>Fotos: {portadaCredito}</figcaption>
+</figure>
+
+<style>
+  .collage {
+    margin: 0;
+  }
+  .stage {
+    position: relative;
+    aspect-ratio: 1 / 0.93;
+  }
+  .shot {
+    position: absolute;
+    padding: 0.3rem;
+    background: var(--white);
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 24px -14px rgb(36 51 45 / 0.6);
+  }
+  .shot :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 0.3rem;
+  }
+  .a {
+    top: 0;
+    left: 0;
+    width: 70%;
+    transform: rotate(-2deg);
+    z-index: 2;
+  }
+  .b {
+    top: 9%;
+    right: 0;
+    width: 42%;
+    transform: rotate(4deg);
+    z-index: 3;
+  }
+  .c {
+    bottom: 3%;
+    left: 6%;
+    width: 49%;
+    transform: rotate(3deg);
+    z-index: 3;
+  }
+  .d {
+    bottom: 0;
+    right: 1%;
+    width: 47%;
+    transform: rotate(-3deg);
+    z-index: 4;
+  }
+  figcaption {
+    margin-top: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  /* La cinta de la imagen inferior queda arriba, para no salirse del encuadre. */
+  .shot.tape::after {
+    display: none;
+  }
+</style>

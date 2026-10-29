@@ -1,0 +1,148 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/ui/PageHeader.astro';
+import SectionLabel from '../../components/ui/SectionLabel.astro';
+import Button from '../../components/ui/Button.astro';
+import CtaBand from '../../components/sections/CtaBand.astro';
+import ActivityCard from '../../components/ui/ActivityCard.astro';
+import { lineas, lineasConDetalle } from '../../data/lineas';
+import { getActividades } from '../../lib/content';
+import '../../styles/activity-card.css';
+
+export const getStaticPaths = (() =>
+  lineasConDetalle.map((linea) => ({ params: { slug: linea.slug }, props: { linea } }))) satisfies GetStaticPaths;
+
+const { linea } = Astro.props;
+const detalle = linea.detalle!;
+const otras = lineas.filter((l) => l.slug !== linea.slug && l.detalle);
+const relacionadas = (await getActividades()).filter((a) => a.data.categoria === linea.categoria).slice(0, 3);
+---
+
+<BaseLayout title={linea.titulo} description={`${linea.resumen} ${detalle.lema}`}>
+  <PageHeader
+    title={linea.titulo}
+    intro={detalle.lema}
+    eyebrow="Qué hacemos"
+    tone="green"
+    crumbs={[{ label: 'Qué hacemos', href: '/que-hacemos' }, { label: linea.titulo }]}
+  />
+
+  <section class="section" aria-labelledby="intro">
+    <div class="container row">
+      <div class="row__label"><SectionLabel>En qué consiste</SectionLabel></div>
+      <div class="row__body">
+        <h2 id="intro" class="statement">{linea.enQueConsiste}</h2>
+      </div>
+    </div>
+  </section>
+
+  {
+    detalle.secciones.map((s, i) => (
+      <section class:list={['section--tight', 'section', { 'section--alt': i % 2 === 0 }]} aria-labelledby={`s${i}`}>
+        <div class="container row">
+          <div class="row__label"><SectionLabel>{String(i + 1).padStart(2, '0')}</SectionLabel></div>
+          <div class="row__body">
+            <h2 id={`s${i}`} class="sub">{s.titulo}</h2>
+            <div class="prose">
+              {s.parrafos.map((p) => <p>{p}</p>)}
+            </div>
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <section class="section" aria-labelledby="aporta">
+    <div class="container row">
+      <div class="row__label"><SectionLabel>Qué busca aportar</SectionLabel></div>
+      <div class="row__body">
+        <h2 id="aporta" class="statement">{linea.queBuscaAportar}</h2>
+        {
+          detalle.aclaracion && (
+            <aside class="note" aria-label="Aclaración importante">
+              <p>{detalle.aclaracion}</p>
+            </aside>
+          )
+        }
+        <div class="prose">
+          <p>{linea.comoConocerla}</p>
+        </div>
+        <Button href="/actividades" variant="outline" arrow>Ver actividades</Button>
+      </div>
+    </div>
+  </section>
+
+  {
+    relacionadas.length > 0 && (
+      <section class="section section--alt" aria-labelledby="rel">
+        <div class="container row">
+          <div class="row__label"><SectionLabel>Relacionadas</SectionLabel></div>
+          <div class="row__body">
+            <h2 id="rel" class="sub">Actividades relacionadas</h2>
+            <ul class="activity-grid rel">
+              {relacionadas.map((a) => <li><ActivityCard actividad={a} /></li>)}
+            </ul>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section section--tight" aria-label="Otras líneas de trabajo">
+    <div class="container row">
+      <div class="row__label"><SectionLabel>Otras líneas</SectionLabel></div>
+      <div class="row__body">
+        <ul class="others">
+          {otras.map((o) => <li><a href={`/que-hacemos/${o.slug}`}>{o.titulo}</a></li>)}
+          <li><a href="/que-hacemos">Todas las líneas</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  .sub {
+    font-size: clamp(1.75rem, 1.2rem + 2vw, 3rem);
+    letter-spacing: -0.03em;
+  }
+  .note {
+    max-width: 40rem;
+    padding: var(--space-5);
+    border-left: 8px solid var(--coral);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    background: var(--yellow-soft);
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .rel {
+    width: 100%;
+  }
+  .others {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .others a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0.4rem 1rem;
+    border: 2px solid var(--ink);
+    border-radius: var(--radius-btn);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .others a:hover {
+    background: var(--ink);
+    color: var(--cream);
+  }
+</style>

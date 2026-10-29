@@ -1,0 +1,25 @@
+---
+import '../../styles/activity-card.css';
+
+interface Props {
+  category?: string;
+  /** Texto de fecha ya formateado. */
+  dateLabel?: string;
+  /** Fecha ISO para el atributo datetime (solo si la fecha es exacta). */
+  dateIso?: string;
+  place?: string;
+}
+const { category, dateLabel, dateIso, place } = Astro.props;
+---
+
+<ul class="post-meta">
+  {category && <li class="post-meta__tag">{category}</li>}
+  {
+    dateLabel && (
+      <li>
+        {dateIso ? <time datetime={dateIso}>{dateLabel}</time> : <span>{dateLabel}</span>}
+      </li>
+    )
+  }
+  {place && <li>{place}</li>}
+</ul>

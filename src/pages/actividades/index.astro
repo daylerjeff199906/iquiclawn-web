@@ -1,0 +1,83 @@
+---
+import { getImage } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/ui/PageHeader.astro';
+import ActivityCard from '../../components/ui/ActivityCard.astro';
+import EmptyState from '../../components/ui/EmptyState.astro';
+import Button from '../../components/ui/Button.astro';
+import ActivityBrowser, { type BrowserItem } from '../../components/interactive/ActivityBrowser';
+import { getActividades, fechaActividad, isoDate } from '../../lib/content';
+import { categorias, MIN_ACTIVIDADES_PARA_FILTROS } from '../../data/categorias';
+import '../../styles/activity-card.css';
+
+const actividades = await getActividades();
+const withFilters = actividades.length >= MIN_ACTIVIDADES_PARA_FILTROS;
+
+const items: BrowserItem[] = withFilters
+  ? await Promise.all(
+      actividades.map(async ({ id, data }) => {
+        const img = data.imagen ? await getImage({ src: data.imagen, width: 800, format: 'webp' }) : undefined;
+        return {
+          id,
+          titulo: data.titulo,
+          resumen: data.resumen,
+          categoria: data.categoria,
+          categoriaLabel: categorias[data.categoria],
+          fechaLabel: fechaActividad(data),
+          fechaIso: data.fecha ? isoDate(data.fecha) : undefined,
+          imagen: img
+            ? { src: img.src, width: img.options.width ?? 800, height: img.options.height ?? 600, alt: data.imagenAlt ?? '' }
+            : undefined,
+        };
+      }),
+    )
+  : [];
+---
+
+<BaseLayout
+  title="Actividades"
+  description="Registro de las actividades documentadas de Iquiclown: clown comunitario y hospitalario, formación y participación cultural en Iquitos."
+>
+  <PageHeader
+    title="Actividades"
+    intro="El registro de lo que Iquiclown ha realizado o tiene programado. Solo publicamos actividades documentadas."
+    eyebrow="Registro"
+    crumbs={[{ label: 'Actividades' }]}
+  />
+
+  <section class="section" aria-label="Listado de actividades">
+    <div class="container">
+      {
+        actividades.length === 0 ? (
+          <EmptyState
+            title="Aún no hay actividades publicadas"
+            text="Estamos reuniendo y validando el registro de actividades. Vuelve pronto o revisa las novedades."
+          >
+            <Button href="/novedades" variant="outline">Ir a novedades</Button>
+          </EmptyState>
+        ) : withFilters ? (
+          <ActivityBrowser client:load items={items} />
+        ) : (
+          <ul class="activity-grid">
+            {actividades.map((a, i) => (
+              <li><ActivityCard actividad={a} eager={i < 3} /></li>
+            ))}
+          </ul>
+        )
+      }
+
+      <p class="note">
+        ¿Tienes información o registros de una actividad de Iquiclown?
+        <a href="/contacto">Escríbenos</a> y la revisaremos antes de publicarla.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .note {
+    margin-top: var(--space-8);
+    max-width: 38rem;
+    color: var(--text-muted);
+  }
+</style>

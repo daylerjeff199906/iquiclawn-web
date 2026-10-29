@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/ui/PageHeader.astro';
+import { organization } from '../data/organization';
+
+const { email, formEndpoint } = organization.contact;
+---
+
+<BaseLayout
+  title="Política de privacidad"
+  description="Cómo trata este sitio los datos personales: qué se recoge, para qué se usa y cómo ejercer tus derechos."
+>
+  <PageHeader
+    title="Política de privacidad"
+    intro="Qué datos trata este sitio web, para qué y cómo puedes consultarnos."
+    crumbs={[{ label: 'Política de privacidad' }]}
+  />
+
+  <section class="section">
+    <div class="container--narrow prose">
+      <h2>Quién responde por este sitio</h2>
+      <p>
+        Este sitio web pertenece a {organization.name}, organización de voluntariado artístico y social de
+        {organization.location.locality}, {organization.location.region}, {organization.location.country}.
+      </p>
+
+      <h2>Datos que recoge el sitio</h2>
+      <p>
+        Navegar por este sitio no requiere crear una cuenta. El sitio no utiliza cookies de seguimiento ni herramientas
+        de analítica o publicidad, y las tipografías se sirven desde el propio sitio.
+      </p>
+
+      {
+        formEndpoint ? (
+          <>
+            <h2>Formulario de contacto</h2>
+            <p>
+              Si usas el formulario de contacto, te pedimos tu nombre, tu correo electrónico, el motivo y tu mensaje.
+              Estos datos se envían a un servicio de gestión de formularios para hacérnoslos llegar.
+            </p>
+            <p>
+              Usamos esa información únicamente para responder a tu consulta. No la utilizamos para otros fines ni la
+              cedemos a terceros con fines comerciales. La conservamos solo el tiempo necesario para atender tu
+              consulta.
+            </p>
+          </>
+        ) : (
+          <>
+            <h2>Contacto</h2>
+            <p>
+              Este sitio no recoge datos mediante formularios. Si en el futuro se incorpora un formulario de contacto,
+              esta política se actualizará para explicar qué datos se piden y con qué finalidad.
+            </p>
+          </>
+        )
+      }
+
+      <h2>Enlaces a otros sitios</h2>
+      <p>
+        Algunas páginas pueden enlazar a sitios externos, como redes sociales o fuentes citadas. Cada uno de esos sitios
+        tiene sus propias políticas, que te recomendamos revisar.
+      </p>
+
+      <h2>Imágenes y personas</h2>
+      <p>
+        Solo publicamos imágenes de actividades con autorización de quienes las proporcionan y, cuando aparecen
+        personas, cuidamos su dignidad y su privacidad. No publicamos imágenes ni datos de pacientes, familiares o
+        personal de salud sin autorización expresa.
+      </p>
+
+      <h2>Tus derechos y cómo consultarnos</h2>
+      <p>
+        Puedes pedirnos información sobre los datos que nos hayas enviado, su corrección o su eliminación.
+        {
+          email ? (
+            <>
+              {' '}Escríbenos a <a href={`mailto:${email}`}>{email}</a>.
+            </>
+          ) : (
+            <>
+              {' '}Usa los canales de la <a href="/contacto">página de contacto</a>.
+            </>
+          )
+        }
+      </p>
+
+      <h2>Cambios en esta política</h2>
+      <p>
+        Esta política se actualizará cuando cambien las funciones del sitio. Revísala de vez en cuando.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .container--narrow {
+    width: min(100% - 2 * var(--gutter), var(--container-narrow));
+    margin-inline: auto;
+  }
+</style>

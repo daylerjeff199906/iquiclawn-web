@@ -1,0 +1,78 @@
+---
+import Button from '../ui/Button.astro';
+
+interface Props {
+  title?: string;
+  text?: string;
+  primary?: { label: string; href: string };
+  secondary?: { label: string; href: string };
+}
+const {
+  title = '¿Te sumas?',
+  text = 'Si te mueve el arte, el juego y el trabajo con la comunidad, conversemos sobre cómo acercarte.',
+  primary = { label: 'Conoce cómo participar', href: '/participa' },
+  secondary = { label: 'Ir a contacto', href: '/contacto' },
+} = Astro.props;
+---
+
+<section class="cta" aria-labelledby="cta-title">
+  <div class="container">
+    <h2 id="cta-title">{title}</h2>
+    <div class="foot">
+      <p class="text">{text}</p>
+      <div class="actions">
+        <Button href={primary.href} variant="ink" arrow>{primary.label}</Button>
+        <Button href={secondary.href} variant="outline" class="on-coral">{secondary.label}</Button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Coral puro: solo texto grande (>= 24 px) y botones con su propio fondo. */
+  .cta {
+    background: var(--coral);
+    color: var(--ink);
+    padding-block: var(--space-9);
+    --text: var(--ink);
+    --on-text: var(--cream);
+    --focus: var(--ink);
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(4rem, 0.6rem + 17vw, 15rem);
+    line-height: 0.92;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    color: var(--cream);
+  }
+  .foot {
+    display: grid;
+    gap: var(--space-5);
+    margin-top: var(--space-6);
+  }
+  @media (min-width: 62rem) {
+    .foot {
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: var(--space-8);
+    }
+  }
+  .text {
+    max-width: 36rem;
+    font-size: clamp(1.5rem, 1.2rem + 0.6vw, 1.75rem);
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--ink);
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+  .actions :global(.on-coral) {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+</style>
